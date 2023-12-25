@@ -16,22 +16,23 @@ const { NotImplementedError } = require('../extensions/index.js');
  *
  */
 function renameFiles(names) {
-  const count = {};
+  const nameCounts = {};
+  const result = [];
 
-  return names.map((name) => {
+  names.forEach((name) => {
     let newName = name;
-    let fileCount = count[name] || 0;
+    let count = 1;
 
-    while (count[newName]) {
-      fileCount++;
-      newName = `${name}(${fileCount})`;
+    while (nameCounts[newName]) {
+      newName = `${name}(${count})`;
+      count +=1;
     }
 
-    count[newName] = 1;
-    count[name] = fileCount;
-
-    return newName;
+    nameCounts[newName] = true;
+    result.push(newName);
   });
+
+  return result;
 }
 
 module.exports = {

@@ -19,19 +19,17 @@ const { NotImplementedError } = require('../extensions/index.js');
 function getMatrixElementsSum(matrix) {
   const rows = matrix.length;
   const cols = matrix[0].length;
-
   let sum = 0;
-  let rowAboveHasZero = false;
+  const zeroIndexes = new Set();
 
-  for (let i = 0; i < rows; i +=1) {
-    for (let j = 0; j < cols; j +=1) {
+  for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < cols; j++) {
       if (matrix[i][j] === 0) {
-        rowAboveHasZero = true;
-      } else if (!rowAboveHasZero) {
+        zeroIndexes.add(j);
+      } else if (!zeroIndexes.has(j)) {
         sum += matrix[i][j];
       }
     }
-    rowAboveHasZero = false;
   }
 
   return sum;

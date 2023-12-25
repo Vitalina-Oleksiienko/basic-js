@@ -26,39 +26,30 @@ const { NotImplementedError } = require('../extensions/index.js');
 function minesweeper(matrix) {
   const rows = matrix.length;
   const cols = matrix[0].length;
+  const result = [];
 
-  const result = new Array(rows).fill(0).map(() => new Array(cols).fill(0));
+  for (let i = 0; i < rows; i++) {
+    result.push([]);
+    for (let j = 0; j < cols; j++) {
+      let count = 0;
 
-  for (let i = 0; i < rows; i +=1) {
-    for (let j = 0; j < cols; j +=1) {
-      if (matrix[i][j]) {
-        result[i][j] = -1;
-      } else {
-        const minesAround = countMinesAround(matrix, i, j, rows, cols);
-        result[i][j] = minesAround;
+      for (let x = -1; x <= 1; x++) {
+        for (let y = -1; y <= 1; y++) {
+          if (i + x >= 0 && i + x < rows && j + y >= 0 && j + y < cols) {
+            if (x !== 0 || y !== 0) {
+              if (matrix[i + x][j + y]) {
+                count++;
+              }
+            }
+          }
+        }
       }
+
+      result[i].push(count);
     }
   }
 
   return result;
-}
-
-function countMinesAround(matrix, i, j, rows, cols) {
-  let count = 0;
-  for (let di = -1; di <= 1; di +=1) {
-    for (let dj = -1; dj <= 1; dj +=1) {
-      const ni = i + di;
-      const nj = j + dj;
-      if (
-        0 <= ni && ni < rows &&
-        0 <= nj && nj < cols &&
-        matrix[ni][nj]
-      ) {
-        count +=1;
-      }
-    }
-  }
-  return count;
 }
 
 module.exports = {

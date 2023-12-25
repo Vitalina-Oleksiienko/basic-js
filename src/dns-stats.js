@@ -26,12 +26,17 @@ function getDNSStats(domains) {
   const dnsStats = {};
 
   for (const domain of domains) {
-    const parts = domain.split('.').reverse();
+    const domainParts = domain.split('.').reverse();
     let currentDomain = '';
 
-    for (const part of parts) {
-      currentDomain = part + (currentDomain ? '.' + currentDomain : ''); 
-      dnsStats[currentDomain] = (dnsStats[currentDomain] || 0) + 1; 
+    for (const part of domainParts) {
+      currentDomain += `.${part}`;
+
+      if (!dnsStats[currentDomain]) {
+        dnsStats[currentDomain] = 1;
+      } else {
+        dnsStats[currentDomain]++;
+      }
     }
   }
 
