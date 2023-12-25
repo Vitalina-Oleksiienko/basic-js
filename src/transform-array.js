@@ -14,31 +14,39 @@ const { NotImplementedError } = require('../extensions/index.js');
  * 
  */
 function transform(arr) {
-  const transformedArr = [];
+  if (!Array.isArray(arr)) {
+    throw new Error('Invalid input. Please provide an array.');
+  }
+
+  const result = [];
+  const sequences = {
+    '--discard-next': true,
+    '--discard-prev': true,
+    '--double-next': true,
+    '--double-prev': true,
+  };
 
   for (let i = 0; i < arr.length; i +=1) {
-    const element = arr[i];
-
-    if (typeof element === 'string' && element.startsWith('--')) {
-      const controlSequence = element.substring(2);
-
-      switch (controlSequence) {
-        case 'double-next':
-          transformedArr.push(arr[i + 1], arr[i + 1]);
-          i +=1;
-          break;
-        case 'discard-prev':
-          transformedArr.pop();
-          break;
-        default:
-          break;
+    if (arr[i] in sequences) {
+      if (arr[i] === '--discard-next') {
+        i +=1;
+      } else if (arr[i] === '--discard-prev') {
+        result.pop();
+      } else if (arr[i] === '--double-next') {
+        if (i + 1 < arr.length) {
+          result.push(arr[i + 1]);
+        }
+      } else if (arr[i] === '--double-prev') {
+        if (i - 1 >= 0) {
+          result.push(arr[i - 1]);
+        }
       }
     } else {
-      transformedArr.push(element);
+      result.push(arr[i]);
     }
   }
 
-  return transformedArr;
+  return result;
 }
 
 module.exports = {

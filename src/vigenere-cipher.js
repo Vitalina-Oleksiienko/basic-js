@@ -22,6 +22,7 @@ const { NotImplementedError } = require('../extensions/index.js');
 class VigenereCipheringMachine {
   constructor(direct = true) {
     this.direct = direct;
+    this.alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
   }
 
   encrypt(text, key) {
@@ -33,6 +34,7 @@ class VigenereCipheringMachine {
   }
 
   transform(text, key, direct) {
+    const alphabet = this.alphabet;
     const cipher = [];
     let keyIndex = 0;
 
