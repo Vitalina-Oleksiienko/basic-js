@@ -26,11 +26,17 @@ class VigenereCipheringMachine {
   }
 
   encrypt(text, key) {
-    return this.transform(text, key, this.direct);
+    if (!text || !key) {
+      throw new Error('Incorrect arguments!');
+    }
+    return this.transform(text, key, true);
   }
 
   decrypt(text, key) {
-    return this.transform(text, key, !this.direct);
+    if (!text || !key) {
+      throw new Error('Incorrect arguments!');
+    }
+    return this.transform(text, key, false);
   }
 
   transform(text, key, direct) {
@@ -38,7 +44,7 @@ class VigenereCipheringMachine {
     const cipher = [];
     let keyIndex = 0;
 
-    for (let i = 0; i < text.length; i +=1) {
+    for (let i = 0; i < text.length; i += 1) {
       const char = text[i].toUpperCase();
       const keyChar = key[keyIndex % key.length].toUpperCase();
 
@@ -48,17 +54,17 @@ class VigenereCipheringMachine {
           ? (alphabet.indexOf(char) + shift) % 26
           : (alphabet.indexOf(char) - shift + 26) % 26;
         cipher.push(alphabet[newIndex]);
+        keyIndex += 1;
       } else {
         cipher.push(char);
       }
-
-      keyIndex +=1;
     }
 
-    return cipher.join('');
+    return this.direct ? cipher.join('') : cipher.reverse().join('');
   }
 }
 
 module.exports = {
   VigenereCipheringMachine
 };
+
